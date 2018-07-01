@@ -19,16 +19,25 @@
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+#include <wx/wx.h>
+#include <wx/socket.h>
 #endif
 
 class OncFrame: public wxFrame {
 public:
     OncFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 private:
+    wxTextCtrl *m_text;
+    wxTextCtrl *m_entry;
+    wxSocketClient *m_socket;
+
     void OnAbout(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnNewConnection(wxCommandEvent& event);
+
+    void OnEntryEnter(wxCommandEvent& event);
+
+    void OnSocketEvent(wxSocketEvent& event);
     wxDECLARE_EVENT_TABLE();
 };
 
