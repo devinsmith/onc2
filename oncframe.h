@@ -33,7 +33,11 @@ private:
 
     void OnAbout(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
+
     void OnNewConnection(wxCommandEvent& event);
+    void OnDisconnect(wxCommandEvent& event);
+    void UpdateNewConnection(wxUpdateUIEvent& event);
+    void UpdateDisconnect(wxUpdateUIEvent& event);
 
     void OnEntryEnter(wxCommandEvent& event);
 

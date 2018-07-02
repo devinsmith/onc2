@@ -26,8 +26,11 @@ enum
 
 wxBEGIN_EVENT_TABLE(OncFrame, wxFrame)
   EVT_MENU(ID_NewConnection, OncFrame::OnNewConnection)
+  EVT_MENU(ID_Disconnect, OncFrame::OnDisconnect)
   EVT_MENU(wxID_EXIT,  OncFrame::OnExit)
   EVT_MENU(wxID_ABOUT, OncFrame::OnAbout)
+  EVT_UPDATE_UI(ID_NewConnection, OncFrame::UpdateNewConnection)
+  EVT_UPDATE_UI(ID_Disconnect, OncFrame::UpdateDisconnect)
   EVT_SOCKET(SOCKET_ID, OncFrame::OnSocketEvent)
   EVT_TEXT_ENTER(-1, OncFrame::OnEntryEnter)
 wxEND_EVENT_TABLE()
@@ -38,8 +41,9 @@ OncFrame::OncFrame(const wxString& title, const wxPoint& pos,
 {
   // Create file menu.
   wxMenu *menuFile = new wxMenu;
-  menuFile->Append(ID_NewConnection, "&New Connection...\tCtrl-H",
+  menuFile->Append(ID_NewConnection, "&New Connection...\tCtrl-N",
     "Make a new chat connection");
+  menuFile->Append(ID_Disconnect, "Disconnect", "Disconnect");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
 
@@ -72,9 +76,36 @@ OncFrame::OncFrame(const wxString& title, const wxPoint& pos,
 
 }
 
+void OncFrame::UpdateNewConnection(wxUpdateUIEvent& event)
+{
+  if (m_socket != NULL) {
+    event.Enable(false);
+  } else {
+    event.Enable(true);
+  }
+}
+
+void OncFrame::UpdateDisconnect(wxUpdateUIEvent& event)
+{
+  if (m_socket != NULL) {
+    event.Enable(true);
+  } else {
+    event.Enable(false);
+  }
+}
+
 void OncFrame::OnExit(wxCommandEvent& event)
 {
     Close(true);
+}
+
+void OncFrame::OnDisconnect(wxCommandEvent& event)
+{
+  if (m_socket == NULL) {
+    wxLogMessage("Make a connection first!");
+  }
+  m_socket->Destroy();
+  m_socket = NULL;
 }
 
 void OncFrame::OnAbout(wxCommandEvent& event)
@@ -130,17 +161,6 @@ void OncFrame::OnSocketEvent(wxSocketEvent& event)
   {
     m_text->AppendText(_("\nConnected to server.\n"));
 
-#if 0
-    // Fill the arry with the numbers 0 through 9 as characters
-    char mychar = '0';
-    for (int i = 0; i < 10; i++) {
-      buf[i] = mychar++;
-    }
-    // Send the characters to the server
-    sock->Write(buf, sizeof(buf));
-    m_text->AppendText(_("Wrote string to server.\n"));
-#endif
-
     break;
   }
   case wxSOCKET_INPUT:
@@ -150,7 +170,6 @@ void OncFrame::OnSocketEvent(wxSocketEvent& event)
     buf[sz] = '\0';
 
     m_text->AppendText(buf);
-//    m_text->AppendText("\n");
 
     break;
   }
@@ -164,6 +183,8 @@ void OncFrame::OnSocketEvent(wxSocketEvent& event)
 
     break;
   }
+  default:
+    break;
   }
 }
 
