@@ -16,12 +16,11 @@
 
 #include <oncframe.h>
 
-enum
-{
-    ID_NewConnection = 1,
-    ID_Disconnect,
+enum {
+  ID_NewConnection = 1,
+  ID_Disconnect,
 
-    SOCKET_ID
+  SOCKET_ID
 };
 
 wxBEGIN_EVENT_TABLE(OncFrame, wxFrame)
@@ -70,6 +69,7 @@ OncFrame::OncFrame(const wxString& title, const wxPoint& pos,
 
   m_entry = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
       wxDefaultSize, wxTE_PROCESS_ENTER);
+  m_entry->SetFocus();
 
   vbox->Add(m_entry, 0, wxEXPAND, 1);
   panel->SetSizer(vbox);
@@ -180,6 +180,7 @@ void OncFrame::OnSocketEvent(wxSocketEvent& event)
     sock->Destroy();
 
     m_text->AppendText(_("Connection lost.\n"));
+    m_socket = NULL;
 
     break;
   }
