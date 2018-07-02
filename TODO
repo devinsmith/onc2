@@ -1,0 +1,5 @@
+- Move socket stuff to a seperate class.
+- Basic Settings / Preferences.
+-- Ideally let user choose fonts and colors.
+- TLS support.
+- Windows build / binaries.
