@@ -10,8 +10,12 @@ DEPS = $(SRCS:.cpp=.d)
 CXX? = g++
 
 # Dependencies
-DEP_INCLUDES = $(shell wx-config --cflags)
-DEP_LIBS = $(shell wx-config --libs)
+#WX_CONFIG = wx-config
+# Gtk3+
+WX_CONFIG = wx-config-gtk3
+
+DEP_INCLUDES = $(shell $(WX_CONFIG) --cflags)
+DEP_LIBS = $(shell $(WX_CONFIG) --libs)
 
 CFLAGS = -Wall -O2 -I.
 
